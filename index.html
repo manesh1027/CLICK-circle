@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click the Circle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Click the Circle!</h1>
+
+  <div class="scoreboard">
+    <span>Score: <span id="score">0</span></span>
+    <span class="time-container">
+      Time: <span id="time" class="time-display">30</span>s
+      <div id="timeSelection" class="time-dropdown"></div>
+    </span>
+  </div>
+
+  <!-- Start / Stop / Resume -->
+  <div id="startScreen">
+    <button id="startBtn" onclick="startCountdown()">Start Game</button>
+    <div id="pauseControls" style="display: none;">
+      <button onclick="resumeGame()">Resume</button>
+      <button onclick="startCountdown()">Restart</button>
+    </div>
+  </div>
+
+  <!-- Countdown -->
+  <div id="countdown">3</div>
+
+  <!-- Game Area -->
+  <div id="gameArea"></div>
+
+  <!-- Game Over -->
+  <div id="gameOverScreen">
+    <h2>Game Over!</h2>
+    <p>Your score: <span id="finalScore"></span></p>
+    <button onclick="startCountdown()">Play Again</button>
+  </div>
+
+  <!-- Sound -->
+  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_fdc00bfa89.mp3" preload="auto"></audio>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>
