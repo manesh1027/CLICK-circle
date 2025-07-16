@@ -79,8 +79,11 @@ function spawnCircle() {
 
   const circle = document.createElement("div");
   const size = Math.random() * 40 + 20;
-  const x = Math.random() * (gameArea.clientWidth - size);
-  const y = Math.random() * (gameArea.clientHeight - size);
+  // Clamp x and y so circle always fits fully inside gameArea, avoid subpixel overflow
+  const maxX = Math.floor(Math.max(0, gameArea.clientWidth - size));
+  const maxY = Math.floor(Math.max(0, gameArea.clientHeight - size));
+  const x = Math.floor(Math.random() * (maxX + 1));
+  const y = Math.floor(Math.random() * (maxY + 1));
 
   circle.classList.add("circle");
   circle.style.width = `${size}px`;
@@ -194,6 +197,20 @@ function startCountdown() {
     }
   }, 1000);
 }
+
+// When a circle is clicked
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('circle')) {
+    // Create a new Audio instance for each click
+    new Audio('sounds/pop2.mp3').play();
+    // score++;
+    scoreDisplay.textContent = score;
+    clickSound.currentTime = 0;
+    clickSound.play();
+    e.target.remove();
+    updateDifficulty();
+  }
+});
 
 window.addEventListener("resize", () => {
   gameArea.style.width = "100%";
