@@ -80,9 +80,11 @@ function spawnCircle() {
 
   const circle = document.createElement("div");
   const size = Math.random() * 40 + 20;
-  // Clamp x and y so circle always fits fully inside gameArea, avoid subpixel overflow
-  const maxX = Math.floor(Math.max(0, gameArea.clientWidth - size));
-  const maxY = Math.floor(Math.max(0, gameArea.clientHeight - size));
+
+  // Use getBoundingClientRect for accurate width/height
+  const rect = gameArea.getBoundingClientRect();
+  const maxX = Math.floor(Math.max(0, rect.width - size));
+  const maxY = Math.floor(Math.max(0, rect.height - size));
   const x = Math.floor(Math.random() * (maxX + 1));
   const y = Math.floor(Math.random() * (maxY + 1));
 
@@ -136,7 +138,11 @@ function startGame() {
     if (!isPaused) {
       timeLeft--;
       timeDisplay.textContent = timeLeft;
-      if (timeLeft <= 0) endGame();
+      if (timeLeft <= 0) {
+        clearInterval(gameInterval); // Stop the timer immediately
+        gameInterval = null;
+        endGame();
+      }
     }
   }, 1000);
 
