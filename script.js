@@ -225,5 +225,5 @@ document.addEventListener('click', function(e) {
 
 window.addEventListener("resize", () => {
   gameArea.style.width = "100%";
-  gameArea.style.height = "100vh";
+  gameArea.style.height = "calc(100vh - 150px)";
 });

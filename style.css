@@ -31,8 +31,6 @@ h1 {
   position: relative;
   width: 100%;
   height: calc(100vh - 150px);
-  min-height: 300px;
-  max-height: 100vh;
   background-color: #222;
   overflow: hidden;
   cursor: crosshair;
