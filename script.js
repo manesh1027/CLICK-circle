@@ -11,6 +11,7 @@ const startBtn = document.getElementById("startBtn");
 const pauseControls = document.getElementById("pauseControls");
 const clickSound = document.getElementById("clickSound");
 const timeSelectionDiv = document.getElementById("timeSelection");
+const muteBtn = document.getElementById("muteBtn");
 
 let score = 0;
 let timeLeft = 30;
@@ -20,6 +21,7 @@ let spawnInterval = null;
 let spawnRate = 800;
 let isPaused = false;
 let gameOver = false;
+let isMuted = false;
 
 // High score from localStorage
 let highScore = localStorage.getItem("highScore") || 0;
@@ -98,8 +100,10 @@ function spawnCircle() {
   circle.addEventListener("click", () => {
     score++;
     scoreDisplay.textContent = score;
-    clickSound.currentTime = 0;
-    clickSound.play();
+    if (!isMuted) {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
     circle.remove();
     updateDifficulty();
   });
@@ -212,15 +216,21 @@ function startCountdown() {
 // When a circle is clicked
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('circle')) {
-    // Create a new Audio instance for each click
-    new Audio('sounds/pop2.mp3').play();
+    if (!isMuted) {
+      new Audio('sounds/pop2.mp3').play();
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
     // score++;
     scoreDisplay.textContent = score;
-    clickSound.currentTime = 0;
-    clickSound.play();
     e.target.remove();
     updateDifficulty();
   }
+});
+
+muteBtn.addEventListener("click", () => {
+  isMuted = !isMuted;
+  muteBtn.textContent = isMuted ? "🔇" : "🔊";
 });
 
 window.addEventListener("resize", () => {
