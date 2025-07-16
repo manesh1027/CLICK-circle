@@ -15,10 +15,11 @@ const timeSelectionDiv = document.getElementById("timeSelection");
 let score = 0;
 let timeLeft = 30;
 let selectedTime = 30;
-let gameInterval;
-let spawnInterval;
+let gameInterval = null;
+let spawnInterval = null;
 let spawnRate = 800;
 let isPaused = false;
+let gameOver = false;
 
 // High score from localStorage
 let highScore = localStorage.getItem("highScore") || 0;
@@ -75,7 +76,7 @@ function getRandomColor() {
 }
 
 function spawnCircle() {
-  if (isPaused) return;
+  if (isPaused || gameOver) return;
 
   const circle = document.createElement("div");
   const size = Math.random() * 40 + 20;
@@ -121,6 +122,7 @@ function startGame() {
   timeLeft = selectedTime;
   spawnRate = 800;
   isPaused = false;
+  gameOver = false;
 
   scoreDisplay.textContent = score;
   timeDisplay.textContent = timeLeft;
@@ -160,6 +162,9 @@ function resumeGame() {
 function endGame() {
   clearInterval(gameInterval);
   clearInterval(spawnInterval);
+  gameInterval = null;
+  spawnInterval = null;
+  gameOver = true;
   gameArea.innerHTML = "";
   gameOverScreen.style.display = "block";
   finalScore.textContent = score;
