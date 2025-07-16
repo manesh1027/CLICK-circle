@@ -1,8 +1,10 @@
 const gameArea = document.getElementById("gameArea");
 const scoreDisplay = document.getElementById("score");
+const highScoreDisplay = document.getElementById("highScore");
 const timeDisplay = document.getElementById("time");
 const gameOverScreen = document.getElementById("gameOverScreen");
 const finalScore = document.getElementById("finalScore");
+const finalHighScore = document.getElementById("finalHighScore");
 const countdownDisplay = document.getElementById("countdown");
 const startScreen = document.getElementById("startScreen");
 const startBtn = document.getElementById("startBtn");
@@ -12,61 +14,60 @@ const timeSelectionDiv = document.getElementById("timeSelection");
 
 let score = 0;
 let timeLeft = 30;
-let selectedTime = 30; // Default time
+let selectedTime = 30;
 let gameInterval;
 let spawnInterval;
 let spawnRate = 800;
 let isPaused = false;
 
-// Create time selection dropdown
+// High score from localStorage
+let highScore = localStorage.getItem("highScore") || 0;
+highScoreDisplay.textContent = highScore;
+
 const timeOptions = [
-    { label: "10s", value: 10 },
-    { label: "15s", value: 15 },
-    { label: "20s", value: 20 },
-    { label: "30s", value: 30 },
-    { label: "1min", value: 60 }
+  { label: "10s", value: 10 },
+  { label: "15s", value: 15 },
+  { label: "20s", value: 20 },
+  { label: "30s", value: 30 },
+  { label: "1min", value: 60 }
 ];
 
 function createTimeDropdown() {
-    timeSelectionDiv.innerHTML = `
-        <select id="timeSelect" class="time-select">
-            ${timeOptions.map(option => 
-                `<option value="${option.value}" ${option.value === 30 ? 'selected' : ''}>
-                    ${option.label}
-                </option>`
-            ).join('')}
-        </select>
-    `;
-    
-    const select = timeSelectionDiv.querySelector('#timeSelect');
-    select.onchange = (e) => {
-        selectedTime = parseInt(e.target.value);
-        timeDisplay.textContent = selectedTime;
-        timeSelectionDiv.style.display = 'none';
-    };
-
-    // Prevent dropdown clicks from bubbling up
-    timeSelectionDiv.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
+  timeSelectionDiv.innerHTML = `
+    <select id="timeSelect" class="time-select">
+      ${timeOptions.map(opt => `<option value="${opt.value}" ${opt.value === 30 ? 'selected' : ''}>${opt.label}</option>`).join('')}
+    </select>
+  `;
+  const timeSelect = timeSelectionDiv.querySelector('#timeSelect');
+  timeSelect.onchange = (e) => {
+    selectedTime = parseInt(e.target.value);
+    timeDisplay.textContent = selectedTime;
+    timeSelectionDiv.style.display = 'none';
+  };
+  // Prevent click inside dropdown from closing it
+  timeSelectionDiv.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
 }
-
-// Initialize the dropdown
 createTimeDropdown();
 
-// Add click handler for time display
 timeDisplay.parentElement.addEventListener('click', (e) => {
-    if (!isPaused && !gameInterval && !gameOverScreen.style.display.includes('block')) {  // Only allow changes before game starts and when not in game over
-        e.stopPropagation();
-        timeSelectionDiv.style.display = timeSelectionDiv.style.display === 'none' ? 'block' : 'none';
-    }
-});
-
-// Hide dropdown when clicking outside
-document.addEventListener('click', () => {
+  if (!isPaused && !gameInterval && !gameOverScreen.style.display.includes('block')) {
+    e.stopPropagation();
     if (timeSelectionDiv.style.display === 'block') {
-        timeSelectionDiv.style.display = 'none';
+      timeSelectionDiv.style.display = 'none';
+    } else {
+      timeSelectionDiv.style.display = 'block';
+      // Focus the select for better UX
+      const select = timeSelectionDiv.querySelector('#timeSelect');
+      if (select) select.focus();
     }
+  }
+});
+document.addEventListener('click', () => {
+  if (timeSelectionDiv.style.display === 'block') {
+    timeSelectionDiv.style.display = 'none';
+  }
 });
 
 function getRandomColor() {
@@ -107,6 +108,9 @@ function updateDifficulty() {
     spawnRate = Math.max(200, spawnRate - 100);
     spawnInterval = setInterval(spawnCircle, spawnRate);
   }
+  if (score % 20 === 0 && score !== 0) {
+    gameArea.style.backgroundColor = `hsl(${Math.random() * 360}, 30%, 15%)`;
+  }
 }
 
 function startGame() {
@@ -121,6 +125,7 @@ function startGame() {
   gameOverScreen.style.display = "none";
   pauseControls.style.display = "none";
   timeSelectionDiv.style.display = "none";
+  gameArea.style.backgroundColor = "#222";
 
   gameInterval = setInterval(() => {
     if (!isPaused) {
@@ -132,7 +137,6 @@ function startGame() {
 
   spawnInterval = setInterval(spawnCircle, spawnRate);
 
-  // Change Start to Stop
   startBtn.textContent = "Stop";
   startBtn.onclick = pauseGame;
   startBtn.style.display = "inline-block";
@@ -156,6 +160,14 @@ function endGame() {
   gameArea.innerHTML = "";
   gameOverScreen.style.display = "block";
   finalScore.textContent = score;
+
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("highScore", highScore);
+  }
+  finalHighScore.textContent = highScore;
+  highScoreDisplay.textContent = highScore;
+
   startBtn.textContent = "Start Game";
   startBtn.onclick = startCountdown;
   startBtn.style.display = "inline-block";
@@ -165,8 +177,6 @@ function startCountdown() {
   let count = 3;
   countdownDisplay.style.display = "block";
   countdownDisplay.textContent = count;
-
-  // Disable start button during countdown
   startBtn.disabled = true;
   startBtn.style.display = "none";
   pauseControls.style.display = "none";
@@ -179,7 +189,6 @@ function startCountdown() {
     } else {
       clearInterval(countdown);
       countdownDisplay.style.display = "none";
-      // Re-enable start button after countdown
       startBtn.disabled = false;
       startGame();
     }

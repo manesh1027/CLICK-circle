@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Click the Circle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -10,13 +11,13 @@
 
   <div class="scoreboard">
     <span>Score: <span id="score">0</span></span>
+    <span>High Score: <span id="highScore">0</span></span>
     <span class="time-container">
       Time: <span id="time" class="time-display">30</span>s
       <div id="timeSelection" class="time-dropdown"></div>
     </span>
   </div>
 
-  <!-- Start / Stop / Resume -->
   <div id="startScreen">
     <button id="startBtn" onclick="startCountdown()">Start Game</button>
     <div id="pauseControls" style="display: none;">
@@ -25,23 +26,17 @@
     </div>
   </div>
 
-  <!-- Countdown -->
   <div id="countdown">3</div>
-
-  <!-- Game Area -->
   <div id="gameArea"></div>
 
-  <!-- Game Over -->
   <div id="gameOverScreen">
     <h2>Game Over!</h2>
     <p>Your score: <span id="finalScore"></span></p>
+    <p>High score: <span id="finalHighScore"></span></p>
     <button onclick="startCountdown()">Play Again</button>
   </div>
 
-  <!-- Sound -->
   <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_fdc00bfa89.mp3" preload="auto"></audio>
-
-  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>

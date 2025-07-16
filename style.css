@@ -1,4 +1,3 @@
-/* General styling */
 body {
   font-family: Arial, sans-serif;
   background-color: #111;
@@ -9,32 +8,33 @@ body {
 }
 
 html, body {
-  height: 100vh;
-  margin: 0;
-  padding: 0;
+  height: 100%;
   overflow: hidden;
 }
 
 h1 {
-  margin-top: 20px;
+  margin: 10px 0;
+  font-size: 2rem;
 }
 
 .scoreboard {
   display: flex;
   justify-content: center;
-  gap: 50px;
-  font-size: 24px;
-  margin: 20px 0;
+  gap: 15px;
+  font-size: 1rem;
+  flex-wrap: wrap;
+  margin: 5px 10px 10px;
 }
 
 /* Game area */
 #gameArea {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 150px);
   background-color: #222;
   overflow: hidden;
   cursor: crosshair;
+  transition: background-color 1s ease;
 }
 
 /* Circle styling */
@@ -42,37 +42,39 @@ h1 {
   position: absolute;
   border-radius: 50%;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease, opacity 0.4s ease;
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
 }
 
 .circle:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
 }
 
 /* Countdown */
 #countdown {
-  font-size: 80px;
+  font-size: 2.5rem;
   font-weight: bold;
   color: #00ffcc;
-  margin: 20px 0;
+  margin: 10px 0;
   display: none;
 }
 
-/* Start & pause controls */
-#startScreen {
-  margin-top: 20px;
-}
-
+/* Buttons */
 #startScreen button,
 #pauseControls button,
 #gameOverScreen button {
-  padding: 12px 24px;
-  font-size: 18px;
+  padding: 10px 20px;
+  font-size: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   margin: 5px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 #startScreen button {
@@ -86,9 +88,10 @@ h1 {
 
 #pauseControls {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 5px;
+  flex-wrap: wrap;
 }
 
 #pauseControls button {
@@ -103,28 +106,26 @@ h1 {
 /* Game over */
 #gameOverScreen {
   display: none;
-  margin-top: 30px;
   position: fixed;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 20px;
-  text-align: center;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 15px 20px;
   border-radius: 10px;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 90vw;
+  font-size: 0.9rem;
   z-index: 1000;
 }
 
 #gameOverScreen h2 {
-  font-size: 36px;
+  font-size: 1.6rem;
+  margin: 5px 0;
 }
 
 #gameOverScreen p {
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 1rem;
+  margin: 5px 0;
 }
 
 #gameOverScreen button {
@@ -136,75 +137,55 @@ h1 {
   background-color: #cc0000;
 }
 
-#finalScore {
-  font-size: 3rem;
-  margin: 1rem 0;
+#finalScore, #finalHighScore {
+  font-weight: bold;
 }
 
 /* Time selection */
-#timeSelection {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-#timeSelection h3 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 1.1rem;
-}
-
 .time-container {
-    position: relative;
-    cursor: pointer;
+  position: relative;
+  cursor: pointer;
 }
 
 .time-display {
-    text-decoration: underline;
-    cursor: pointer;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .time-display:hover {
-    color: #4CAF50;
+  color: #4CAF50;
 }
 
 #timeSelection {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 5px;
-    background: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 1000;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 5px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
 }
 
 .time-select {
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background: white;
-    color: #333;
-    font-size: 0.9rem;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.2s ease;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: white;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
 .time-select:hover {
-    border-color: #4CAF50;
+  border-color: #4CAF50;
 }
 
 .time-select:focus {
-    border-color: #2196F3;
-    box-shadow: 0 0 5px rgba(33,150,243,0.3);
+  border-color: #2196F3;
+  box-shadow: 0 0 5px rgba(33,150,243,0.3);
 }
